@@ -3,7 +3,23 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - k
+  - a
+  - f
+  - j
+  - s
+  - h
+  - d
+  - l
+  - g
+  - m
+  - c
+  - z
+  - b
+  - v
+  - n
+  - x
   layers:
   - Default
   - TransparentFX
@@ -11,7 +27,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Date
   - 
   - 
   - 
