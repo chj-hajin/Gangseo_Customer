@@ -181,8 +181,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: To test the keyboard, activate the Dummy Game Manager.
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 7bf1333a1f33eae48b1e467ecb4ffb7e, type: 2}
+  m_sharedMaterial: {fileID: -1798234639650260408, guid: 7bf1333a1f33eae48b1e467ecb4ffb7e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -578,8 +578,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Type something..
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 7bf1333a1f33eae48b1e467ecb4ffb7e, type: 2}
+  m_sharedMaterial: {fileID: -1798234639650260408, guid: 7bf1333a1f33eae48b1e467ecb4ffb7e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1667,6 +1667,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8120666751558365711, guid: a39638baca7860e4d880ccde1ec16107, type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8120666751967608713, guid: a39638baca7860e4d880ccde1ec16107, type: 3}
+      propertyPath: m_text
+      value: "\u3142\n"
+      objectReference: {fileID: 0}
+    - target: {fileID: 8120666751967608713, guid: a39638baca7860e4d880ccde1ec16107, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 7bf1333a1f33eae48b1e467ecb4ffb7e, type: 2}
+    - target: {fileID: 8120666751967608713, guid: a39638baca7860e4d880ccde1ec16107, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -1798234639650260408, guid: 7bf1333a1f33eae48b1e467ecb4ffb7e, type: 2}
+    - target: {fileID: 8120666751967608713, guid: a39638baca7860e4d880ccde1ec16107, type: 3}
+      propertyPath: m_hasFontAssetChanged
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8120666752264700596, guid: a39638baca7860e4d880ccde1ec16107, type: 3}

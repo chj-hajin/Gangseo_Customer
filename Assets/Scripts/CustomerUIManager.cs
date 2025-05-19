@@ -14,6 +14,9 @@ public class CustomerUIManager : Singleton<CustomerUIManager>
     [Header("예약 확인 종료되고 이미지 리스트")]
     public GameObject[] walkInObjects;
 
+    [Header("비예약 고객인 것 확인하고 나서의 이미지 리스트")]
+    public GameObject[] noneWalkInObjects;
+
     [Header("IDLE로 돌아가는 타임 아웃 시간")]
     [Tooltip("IDLE로 돌아가는 함수 호출하는거 잊지 말 것")]
     public float idleTimeout = 60f;
@@ -75,10 +78,29 @@ public class CustomerUIManager : Singleton<CustomerUIManager>
         StartCoroutine(PlayWalkIn());
     }
 
+    // 비회원 고객 확인 버튼
+    public void OnNoneWalkInButton()
+    {
+        HideAll();
+        noneScreen.SetActive(true);
+        StartCoroutine(PlayNoneWalkIN());
+    }
+
     // 예약 확인 버튼 클릭 시 Walk-in 애니메이션 재생
     private IEnumerator PlayWalkIn()
     {
         foreach (var obj in walkInObjects)
+        {
+            obj.SetActive(true);
+            yield return new WaitForSeconds(5f);
+            obj.SetActive(false);
+        }
+        ShowMain();
+    }
+
+    private IEnumerator PlayNoneWalkIN()
+    {
+        foreach (var obj in noneWalkInObjects)
         {
             obj.SetActive(true);
             yield return new WaitForSeconds(5f);
