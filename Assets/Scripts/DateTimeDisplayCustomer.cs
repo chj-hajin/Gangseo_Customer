@@ -6,17 +6,13 @@ using System.Globalization;
 using TMPro;
 
 
-public class DateTimeDisplayCustomer : Singleton<DateTimeDisplayCustomer>
+public class DateTimeDisplayCustomer : MonoBehaviour
 {
     [SerializeField] private TMP_Text dateText;   // Inspector에서 할당
     [SerializeField] private TMP_Text dayOfWeekText;  // Inspector에서 할당
     [SerializeField] private TMP_Text ampmText;
     [SerializeField] private TMP_Text timeText;
 
-    protected override void Awake()
-    {
-        base.Awake();
-    }
 
     void FixedUpdate()
     {

@@ -682,8 +682,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e80f595980db49f4a581e35a181ae65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textBox: {fileID: 852178559}
-  printBox: {fileID: 63264406}
+  nameInput: {fileID: 0}
+  phoneInput: {fileID: 0}
+  textKeyboardContainer: {fileID: 0}
+  numericKeyboardContainer: {fileID: 0}
 --- !u!4 &1032424600
 Transform:
   m_ObjectHideFlags: 0
@@ -1595,6 +1597,26 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8120666751217952776, guid: a39638baca7860e4d880ccde1ec16107, type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8120666751453643384, guid: a39638baca7860e4d880ccde1ec16107, type: 3}
+      propertyPath: m_text
+      value: "\u314F"
+      objectReference: {fileID: 0}
+    - target: {fileID: 8120666751453643384, guid: a39638baca7860e4d880ccde1ec16107, type: 3}
+      propertyPath: m_fontSize
+      value: 38
+      objectReference: {fileID: 0}
+    - target: {fileID: 8120666751453643384, guid: a39638baca7860e4d880ccde1ec16107, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 7bf1333a1f33eae48b1e467ecb4ffb7e, type: 2}
+    - target: {fileID: 8120666751453643384, guid: a39638baca7860e4d880ccde1ec16107, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -1798234639650260408, guid: 7bf1333a1f33eae48b1e467ecb4ffb7e, type: 2}
+    - target: {fileID: 8120666751453643384, guid: a39638baca7860e4d880ccde1ec16107, type: 3}
+      propertyPath: m_hasFontAssetChanged
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8120666751496515292, guid: a39638baca7860e4d880ccde1ec16107, type: 3}
