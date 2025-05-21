@@ -7535,6 +7535,67 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1002266830}
   m_CullTransparentMesh: 1
+--- !u!1 &1011875810
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1011875812}
+  - component: {fileID: 1011875811}
+  - component: {fileID: 1011875813}
+  m_Layer: 0
+  m_Name: '*Socket'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1011875811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1011875810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7b943830efbcdc4e86187533cb4074a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  listenPort: 9999
+  absentObject: {fileID: 748303943}
+--- !u!4 &1011875812
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1011875810}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1011875813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1011875810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 108850be495613246b14df1f7a13c8fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  videoServerIP: 192.168.0.9
+  videoServerPort: 9999
 --- !u!1 &1017582761
 GameObject:
   m_ObjectHideFlags: 0
@@ -13378,7 +13439,7 @@ GameObject:
   - component: {fileID: 1835721755}
   - component: {fileID: 1835721754}
   m_Layer: 0
-  m_Name: '*UIManager'
+  m_Name: '*CustomerUIManager'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -78241,6 +78302,7 @@ GameObject:
   - component: {fileID: 8120666752190125776}
   - component: {fileID: 5042468276668005618}
   - component: {fileID: 5720412635181805792}
+  - component: {fileID: 8120666752190125783}
   m_Layer: 5
   m_Name: KeyboardLetter (8)
   m_TagString: Untagged
@@ -78272,6 +78334,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &8120666752190125783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8120666752190125781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dc5d432e7ca57946b2b8cc9d4acd9ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!222 &8120666752213092368
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -80311,6 +80385,7 @@ GameObject:
   - component: {fileID: 8120666752951829469}
   - component: {fileID: 5042468275886369279}
   - component: {fileID: 5720412635475748333}
+  - component: {fileID: 8120666752951829470}
   m_Layer: 5
   m_Name: KeyboardLetter (9)
   m_TagString: Untagged
@@ -80380,6 +80455,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &8120666752951829470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8120666752951829464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dc5d432e7ca57946b2b8cc9d4acd9ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8142739633631344754
 GameObject:
   m_ObjectHideFlags: 0
@@ -85076,3 +85163,4 @@ SceneRoots:
   - {fileID: 1390194270}
   - {fileID: 227212733}
   - {fileID: 1643617074}
+  - {fileID: 1011875812}

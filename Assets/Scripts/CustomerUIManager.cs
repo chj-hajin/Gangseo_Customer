@@ -41,6 +41,7 @@ public class CustomerUIManager : Singleton<CustomerUIManager>
     {
         HideAll();
         mainScreen.SetActive(true);
+        FindObjectOfType<CustomerStateSocketClient>().SendState(CustomerState.STATE_IDLE);
     }
 
     // 예약 입력 화면
@@ -55,6 +56,8 @@ public class CustomerUIManager : Singleton<CustomerUIManager>
     {
         HideAll();
         noneScreen.SetActive(true);
+        FindObjectOfType<CustomerStateSocketClient>()
+          .SendState(CustomerState.STATE_WALK_IN);
     }
 
     // 예약 선택 화면 (여러개의 데이터가 있을 시)
@@ -71,11 +74,12 @@ public class CustomerUIManager : Singleton<CustomerUIManager>
         completeScreen.SetActive(true);
     }
 
-    // 예약 확인 버튼
+    // 회원 예약 확인 버튼
     public void OnWalkInButton()
     {
         HideAll();
         StartCoroutine(PlayWalkIn());
+       
     }
 
     // 비회원 고객 확인 버튼
@@ -83,6 +87,7 @@ public class CustomerUIManager : Singleton<CustomerUIManager>
     {
         HideAll();
         noneScreen.SetActive(true);
+        FindObjectOfType<CustomerStateSocketClient>().SendState(CustomerState.STATE_WALK_IN);
         StartCoroutine(PlayNoneWalkIN());
     }
 
@@ -98,6 +103,7 @@ public class CustomerUIManager : Singleton<CustomerUIManager>
         ShowMain();
     }
 
+    // 비회원 확인 버튼 클릭 시 Walk-in 애니메이션 재생
     private IEnumerator PlayNoneWalkIN()
     {
         foreach (var obj in noneWalkInObjects)

@@ -9,7 +9,12 @@ public class KeyboardButtonController : MonoBehaviour
     public void AddLetter()
     {
         if (GameManager.Instance != null)
+        {
             GameManager.Instance.AddLetter(containerText.text);
+            //HangulComposer.Instance.Add(containerText.text[0]);
+        }
+
+
         else
             Debug.Log(containerText.text + " 눌렀음 ");
     }

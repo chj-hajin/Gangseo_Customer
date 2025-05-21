@@ -144,9 +144,15 @@ public class ReservationInputUI : Singleton<ReservationInputUI>
         }
     }
 
-    private IEnumerator ShowCompleteRoutine()
+    // 예: ReservationInputUI.cs 예약 확인 완료 시
+
+    IEnumerator ShowCompleteRoutine()
     {
         CustomerUIManager.Instance.ShowComplete();
+        // 예약 확인 완료 상태 전송
+        FindObjectOfType<CustomerStateSocketClient>()
+    .SendState(CustomerState.STATE_RESERVATION_CONFIRMED);
+        // 이게 지금일수도 있고 나중일수도 있음 나중에 알아서 판단할 것 
         yield return new WaitForSeconds(10f);
         CustomerUIManager.Instance.ShowMain();
     }
