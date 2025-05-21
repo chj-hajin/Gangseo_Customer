@@ -29,7 +29,7 @@ public class KeyboardController : MonoBehaviour
 
         actionNumbers.SetActive(true);
         actionSmallLetters.SetActive(false);
-        actionCapitalLetters.SetActive(false);
+        actionCapitalLetters.SetActive(true);
 
         smallAlphaRow1.SetActive(false);
         smallAlphaRow2.SetActive(false);
@@ -51,7 +51,7 @@ public class KeyboardController : MonoBehaviour
 
         actionNumbers.SetActive(true);
         actionSmallLetters.SetActive(false);
-        actionCapitalLetters.SetActive(false);
+        actionCapitalLetters.SetActive(true);
 
         capitalAlphaRow1.SetActive(false);
         capitalAlphaRow2.SetActive(false);
@@ -69,11 +69,11 @@ public class KeyboardController : MonoBehaviour
     }
 
     public void ShowSpecialCharsNum() {
-        actionNumbers.SetActive(false);
+        actionNumbers.SetActive(true);
 
         if(isSmallLettersShown) {
             actionSmallLetters.SetActive(true);
-            actionCapitalLetters.SetActive(false);
+            actionCapitalLetters.SetActive(true);
         } else {
             actionSmallLetters.SetActive(false);
             actionCapitalLetters.SetActive(true);
@@ -96,11 +96,11 @@ public class KeyboardController : MonoBehaviour
     }
 
     public void ShowSpecialChars() {
-        actionNumbers.SetActive(false);
+        actionNumbers.SetActive(true);
 
         if(isSmallLettersShown) {
             actionSmallLetters.SetActive(true);
-            actionCapitalLetters.SetActive(false);
+            actionCapitalLetters.SetActive(true);
         } else {
             actionSmallLetters.SetActive(false);
             actionCapitalLetters.SetActive(true);

@@ -1,8 +1,16 @@
-using UnityEngine;
-using UnityEngine.UI;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
 
+
+[Serializable]
+public class ReservationData
+{
+    public string time, vehicleNumber, vehicleModel, customer, supervisor, dealer;
+
+}
 public class ReservationSelection : Singleton<ReservationSelection>
 {
     public RectTransform content;
