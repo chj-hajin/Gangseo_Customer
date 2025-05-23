@@ -1,0 +1,29 @@
+{
+    "result": true,
+    "reservationResponseList": [
+        {
+            "useDate": "2025-05-15",
+            "useStartTime": "14:30",
+            "manufacturerName": "현대",
+            "modelName": "올 뉴 투싼",
+            "gradeName": "디젤 2.0 2WD",
+            "gradeDetailName": "스마트",
+            "vehicleNo": "178허1953",
+            "customerName": "고객명",
+            "firmName": "상사명",
+            "dealerName": "딜러명"
+        },
+        {
+            "useDate": "2025-05-15",
+            "useStartTime": "15:00",
+            "manufacturerName": "현대",
+            "modelName": "더 뉴 싼타페",
+            "gradeName": "디젤 2.2 4WD",
+            "gradeDetailName": "프리미엄",
+            "vehicleNo": "359부9905",
+            "customerName": "고객명",
+            "firmName": "상사명",
+            "dealerName": "딜러명"
+        }
+    ]
+}

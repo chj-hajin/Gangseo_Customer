@@ -9,15 +9,37 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-
 [Serializable]
 public class ReservationListWrapper
 {
     public List<ReservationData> reservations;
 }
 
+[Serializable]
+public class TestResponseWrapper
+{
+    public bool result;
+    public List<TestReservation> reservationResponseList;
+}
+
+[Serializable]
+public class TestReservation
+{
+    public string useDate;
+    public string useStartTime;
+    public string manufacturerName;
+    public string modelName;
+    public string gradeName;
+    public string gradeDetailName;
+    public string vehicleNo;
+    public string customerName;
+    public string firmName;
+    public string dealerName;
+}
+
 /// <summary>
 /// 입력 필드 선택, 문자 및 숫자 입력, 삭제, 제출, 예약 조회 기능을 담당합니다.
+/// 테스트 버튼으로 로컬 JSON 불러오기도 지원함.
 /// </summary>
 public class ReservationInputUI : Singleton<ReservationInputUI>
 {
@@ -33,6 +55,9 @@ public class ReservationInputUI : Singleton<ReservationInputUI>
     public Button prevButton;
     public Button confirmButton;
 
+    [Header("테스트용 버튼")]
+    public Button testButton;
+
     // 현재 입력 중인 필드
     private TMP_InputField currentField;
     public TMP_InputField CurrentField => currentField;
@@ -46,12 +71,16 @@ public class ReservationInputUI : Singleton<ReservationInputUI>
 
     void Start()
     {
+        // 뒤로
         prevButton.onClick.AddListener(() =>
         {
             HideAllKeyboards();
             CustomerUIManager.Instance.ShowMain();
         });
+        // 확인(API 호출)
         confirmButton.onClick.AddListener(OnConfirm);
+        // 테스트 버튼(로컬 JSON)
+        testButton.onClick.AddListener(OnTestLoad);
     }
 
     void Update()
@@ -78,10 +107,6 @@ public class ReservationInputUI : Singleton<ReservationInputUI>
         }
     }
 
-    /// <summary>
-    /// 문자(자모) 버튼 클릭 시 호출
-    /// 숫자 필드인 경우 단순 추가, 문자 필드인 경우 HangulComposer 사용
-    /// </summary>
     public void AddLetter(string letter)
     {
         if (currentField == phoneInput)
@@ -94,20 +119,12 @@ public class ReservationInputUI : Singleton<ReservationInputUI>
         }
     }
 
-    /// <summary>
-    /// 숫자 버튼 클릭 시 호출
-    /// 여러 자리 문자열도 한 번에 추가 가능
-    /// </summary>
     public void AddNumber(string number)
     {
         if (currentField != null && !string.IsNullOrEmpty(number))
             currentField.text += number;
     }
 
-    /// <summary>
-    /// 백스페이스 버튼 클릭 시 호출
-    /// 숫자 필드인 경우 마지막 문자 삭제, 문자 필드인 경우 자모 조합기 사용
-    /// </summary>
     public void DeleteLetter()
     {
         if (currentField == phoneInput)
@@ -121,44 +138,32 @@ public class ReservationInputUI : Singleton<ReservationInputUI>
         }
     }
 
-    /// <summary>
-    /// 확인(엔터) 버튼 클릭 시 호출
-    /// 키보드 UI 숨김
-    /// </summary>
     public void SubmitWord()
     {
         if (currentField != null)
             HideAllKeyboards();
     }
 
-    /// <summary>
-    /// 스페이스(단어 구분) 버튼 클릭 시 호출
-    /// 공백 추가
-    /// </summary>
     public void BreakComposition()
     {
         if (currentField != null)
-        {
             currentField.text = HangulComposer.Instance.Add(' ');
-        }
     }
 
-    /// <summary>
-    /// 예약 확인 프로세스
-    /// </summary>
     private void OnConfirm()
     {
-        // 전화번호 자동 포맷
+        // 전화번호 포맷
         var digits = new string(phoneInput.text.Where(char.IsDigit).ToArray());
         if (digits.Length == 10 && digits.StartsWith("010"))
             phoneInput.text = $"{digits.Substring(0, 3)}-{digits.Substring(3, 4)}-{digits.Substring(7, 4)}";
+
         StartCoroutine(CheckReservations());
     }
 
     private IEnumerator CheckReservations()
     {
         string url = $"https://api.example.com/reservations/check?name={nameInput.text}&phone={phoneInput.text}";
-        using (var req = UnityEngine.Networking.UnityWebRequest.Get(url))
+        using (var req = UnityWebRequest.Get(url))
         {
             yield return req.SendWebRequest();
             if (req.result != UnityWebRequest.Result.Success)
@@ -167,21 +172,63 @@ public class ReservationInputUI : Singleton<ReservationInputUI>
                 yield break;
             }
             var wrapper = JsonUtility.FromJson<ReservationListWrapper>(req.downloadHandler.text);
-            var futureList = wrapper.reservations.FindAll(r =>
-                DateTime.ParseExact(r.time, "HH:mm", CultureInfo.InvariantCulture) >= DateTime.Now);
-            if (futureList.Count == 0)
-                CustomerUIManager.Instance.ShowNone();
-            else if (futureList.Count == 1)
-                yield return StartCoroutine(ShowCompleteRoutine());
-            else
+            ProcessReservations(wrapper.reservations);
+        }
+    }
+
+    private void OnTestLoad()
+    {
+        StartCoroutine(LoadLocalTestData());
+    }
+
+    private IEnumerator LoadLocalTestData()
+    {
+        string path = System.IO.Path.Combine(Application.streamingAssetsPath, "api_1_sample.txt");
+        using (var req = UnityWebRequest.Get(path))
+        {
+            yield return req.SendWebRequest();
+            if (req.result != UnityWebRequest.Result.Success)
             {
-                futureList.Sort((a, b) =>
-                    Math.Abs((DateTime.Parse(a.time) - DateTime.Now).Ticks)
-                        .CompareTo(Math.Abs((DateTime.Parse(b.time) - DateTime.Now).Ticks)));
-                var subset = futureList.GetRange(0, Mathf.Min(5, futureList.Count));
-                ReservationSelection.Instance.Init(subset);
-                CustomerUIManager.Instance.ShowSelection();
+                Debug.LogError("로컬 테스트 데이터 로드 실패: " + req.error);
+                yield break;
             }
+            var json = req.downloadHandler.text;
+            var wrapper = JsonUtility.FromJson<TestResponseWrapper>(json);
+
+            var list = new List<ReservationData>();
+            foreach (var r in wrapper.reservationResponseList)
+            {
+                list.Add(new ReservationData
+                {
+                    time = r.useStartTime,
+                    vehicleNumber = r.vehicleNo,
+                    vehicleModel = $"{r.manufacturerName} {r.modelName}",
+                    customer = r.customerName,
+                    supervisor = r.firmName,
+                    dealer = r.dealerName
+                });
+            }
+            ProcessReservations(list);
+        }
+    }
+
+    private void ProcessReservations(List<ReservationData> reservations)
+    {
+        var futureList = reservations.FindAll(r =>
+            DateTime.ParseExact(r.time, "HH:mm", CultureInfo.InvariantCulture) >= DateTime.Now);
+
+        if (futureList.Count == 0)
+            CustomerUIManager.Instance.ShowNone();
+        else if (futureList.Count == 1)
+            StartCoroutine(ShowCompleteRoutine());
+        else
+        {
+            futureList.Sort((a, b) =>
+                Math.Abs((DateTime.Parse(a.time) - DateTime.Now).Ticks)
+                    .CompareTo(Math.Abs((DateTime.Parse(b.time) - DateTime.Now).Ticks)));
+            var subset = futureList.GetRange(0, Mathf.Min(5, futureList.Count));
+            ReservationSelection.Instance.Init(subset);
+            CustomerUIManager.Instance.ShowSelection();
         }
     }
 
