@@ -12,10 +12,11 @@ public class CustomerUIManager : Singleton<CustomerUIManager>
     public GameObject completeScreen;
 
     [Header("예약 확인 종료되고 이미지 리스트")]
-    public GameObject[] walkInObjects;
+    [SerializeField] private GameObject[] walkInObjects;
 
     [Header("비예약 고객인 것 확인하고 나서의 이미지 리스트")]
-    public GameObject[] noneWalkInObjects;
+    [SerializeField] private GameObject[] noneWalkInObjects;
+    [SerializeField] private GameObject timeDisplay;
 
     [Header("IDLE로 돌아가는 타임 아웃 시간")]
     [Tooltip("IDLE로 돌아가는 함수 호출하는거 잊지 말 것")]
@@ -87,8 +88,9 @@ public class CustomerUIManager : Singleton<CustomerUIManager>
     {
         HideAll();
         noneScreen.SetActive(true);
-        FindObjectOfType<CustomerStateSocketClient>().SendState(CustomerState.STATE_WALK_IN);
+        timeDisplay.SetActive(false);
         StartCoroutine(PlayNoneWalkIN());
+        FindObjectOfType<CustomerStateSocketClient>().SendState(CustomerState.STATE_WALK_IN);
     }
 
     // 예약 확인 버튼 클릭 시 Walk-in 애니메이션 재생
@@ -110,6 +112,7 @@ public class CustomerUIManager : Singleton<CustomerUIManager>
         {
             obj.SetActive(true);
             yield return new WaitForSeconds(5f);
+            timeDisplay.SetActive(true);
             obj.SetActive(false);
         }
         ShowMain();

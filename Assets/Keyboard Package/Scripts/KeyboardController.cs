@@ -4,121 +4,136 @@ using UnityEngine;
 
 public class KeyboardController : MonoBehaviour
 {
-    [SerializeField] GameObject smallAlphaRow1;
-    [SerializeField] GameObject smallAlphaRow2;
-    [SerializeField] GameObject smallAlphaRow3;
+    [SerializeField] GameObject han_smallAlphaRow1;
+    [SerializeField] GameObject han_smallAlphaRow2;
+    [SerializeField] GameObject han_smallAlphaRow3;
 
-    [SerializeField] GameObject capitalAlphaRow1;
-    [SerializeField] GameObject capitalAlphaRow2;
-    [SerializeField] GameObject capitalAlphaRow3;
+    [SerializeField] GameObject han_capitalAlphaRow1;
+    [SerializeField] GameObject han_capitalAlphaRow2;
+    [SerializeField] GameObject han_capitalAlphaRow3;
 
+    [SerializeField] GameObject eng_smallAlphaRow1;
+    [SerializeField] GameObject eng_smallAlphaRow2;
+    [SerializeField] GameObject eng_smallAlphaRow3;
+
+    [SerializeField] GameObject eng_capitalAlphaRow1;
+    [SerializeField] GameObject eng_capitalAlphaRow2;
+    [SerializeField] GameObject eng_capitalAlphaRow3;
+
+
+    /*
     [SerializeField] GameObject numbers;
     [SerializeField] GameObject splCharsNum1;
     [SerializeField] GameObject splCharsNum2;
     [SerializeField] GameObject splChars1;
     [SerializeField] GameObject splChars2;
+    */
 
-    [SerializeField] GameObject actionNumbers;
-    [SerializeField] GameObject actionCapitalLetters;
-    [SerializeField] GameObject actionSmallLetters;
+    [SerializeField] GameObject actionHan;
+    [SerializeField] GameObject actionEng;
+    //[SerializeField] GameObject actionCapital;
 
-    private bool isSmallLettersShown = true;
+    private bool isHanSmallLettersShown = true;
+    private bool isEngSmallLettersShown = true; 
 
-    public void ShowCapitalLetters() {
-        isSmallLettersShown = false;
+    public void ShowHanCapitalLetters() {
+        isHanSmallLettersShown = false;
 
-        actionNumbers.SetActive(true);
-        actionSmallLetters.SetActive(false);
-        actionCapitalLetters.SetActive(true);
+        actionHan.SetActive(true);
+        actionEng.SetActive(true);
+        //actionCapital.SetActive(true);
 
-        smallAlphaRow1.SetActive(false);
-        smallAlphaRow2.SetActive(false);
-        smallAlphaRow3.SetActive(false);
+        han_smallAlphaRow1.SetActive(false);
+        han_smallAlphaRow2.SetActive(false);
+        han_smallAlphaRow3.SetActive(false);
 
-        capitalAlphaRow1.SetActive(true);
-        capitalAlphaRow2.SetActive(true);
-        capitalAlphaRow3.SetActive(true);
+        han_capitalAlphaRow1.SetActive(true);
+        han_capitalAlphaRow2.SetActive(true);
+        han_capitalAlphaRow3.SetActive(true);
 
-        numbers.SetActive(false);
-        splCharsNum1.SetActive(false);
-        splCharsNum2.SetActive(false);
-        splChars1.SetActive(false);
-        splChars2.SetActive(false);
+
+        eng_smallAlphaRow1.SetActive(false);
+        eng_smallAlphaRow2.SetActive(false);
+        eng_smallAlphaRow3.SetActive(false);
+
+        eng_capitalAlphaRow1.SetActive(false);
+        eng_capitalAlphaRow2.SetActive(false);
+        eng_capitalAlphaRow3.SetActive(false);
     }
     
-    public void ShowSmallLetters() {
-        isSmallLettersShown = true;
+    public void ShowHanSmallLetters() {
+        isHanSmallLettersShown = true;
 
-        actionNumbers.SetActive(true);
-        actionSmallLetters.SetActive(false);
-        actionCapitalLetters.SetActive(true);
+        actionHan.SetActive(true);
+        actionEng.SetActive(true);
+        //actionCapital.SetActive(true);
 
-        capitalAlphaRow1.SetActive(false);
-        capitalAlphaRow2.SetActive(false);
-        capitalAlphaRow3.SetActive(false);
+        han_smallAlphaRow1.SetActive(true);
+        han_smallAlphaRow2.SetActive(true);
+        han_smallAlphaRow3.SetActive(true);
 
-        smallAlphaRow1.SetActive(true);
-        smallAlphaRow2.SetActive(true);
-        smallAlphaRow3.SetActive(true);
+        han_capitalAlphaRow1.SetActive(false);
+        han_capitalAlphaRow2.SetActive(false);
+        han_capitalAlphaRow3.SetActive(false);
 
-        numbers.SetActive(false);
-        splCharsNum1.SetActive(false);
-        splCharsNum2.SetActive(false);
-        splChars1.SetActive(false);
-        splChars2.SetActive(false);
+
+        eng_smallAlphaRow1.SetActive(false);
+        eng_smallAlphaRow2.SetActive(false);
+        eng_smallAlphaRow3.SetActive(false);
+
+        eng_capitalAlphaRow1.SetActive(false);
+        eng_capitalAlphaRow2.SetActive(false);
+        eng_capitalAlphaRow3.SetActive(false);
+    }
+    public void ShowEngCapitalLetters()
+    {
+        isEngSmallLettersShown = false;
+
+        actionHan.SetActive(true);
+        actionEng.SetActive(true);
+        //actionCapital.SetActive(true);
+
+        eng_smallAlphaRow1.SetActive(false);
+        eng_smallAlphaRow2.SetActive(false);
+        eng_smallAlphaRow3.SetActive(false);
+
+        eng_capitalAlphaRow1.SetActive(true);
+        eng_capitalAlphaRow2.SetActive(true);
+        eng_capitalAlphaRow3.SetActive(true);
+
+
+        han_smallAlphaRow1.SetActive(false);
+        han_smallAlphaRow2.SetActive(false);
+        han_smallAlphaRow3.SetActive(false);
+
+        han_capitalAlphaRow1.SetActive(false);
+        han_capitalAlphaRow2.SetActive(false);
+        han_capitalAlphaRow3.SetActive(false);
     }
 
-    public void ShowSpecialCharsNum() {
-        actionNumbers.SetActive(true);
+    public void ShowEngSmallLetters()
+    {
+        isEngSmallLettersShown = true;
 
-        if(isSmallLettersShown) {
-            actionSmallLetters.SetActive(true);
-            actionCapitalLetters.SetActive(true);
-        } else {
-            actionSmallLetters.SetActive(false);
-            actionCapitalLetters.SetActive(true);
-        }
+        actionHan.SetActive(true);
+        actionEng.SetActive(true);
+        //actionCapital.SetActive(true);
 
-        smallAlphaRow1.SetActive(false);
-        smallAlphaRow2.SetActive(false);
-        smallAlphaRow3.SetActive(false);
+        eng_smallAlphaRow1.SetActive(true);
+        eng_smallAlphaRow2.SetActive(true);
+        eng_smallAlphaRow3.SetActive(true);
 
-        capitalAlphaRow1.SetActive(false);
-        capitalAlphaRow2.SetActive(false);
-        capitalAlphaRow3.SetActive(false);
+        eng_capitalAlphaRow1.SetActive(false);
+        eng_capitalAlphaRow2.SetActive(false);
+        eng_capitalAlphaRow3.SetActive(false);
 
-        numbers.SetActive(true);
-        splCharsNum1.SetActive(true);
-        splCharsNum2.SetActive(true);
+        han_smallAlphaRow1.SetActive(false);
+        han_smallAlphaRow2.SetActive(false);
+        han_smallAlphaRow3.SetActive(false);
 
-        splChars1.SetActive(false);
-        splChars2.SetActive(false);
+        han_capitalAlphaRow1.SetActive(false);
+        han_capitalAlphaRow2.SetActive(false);
+        han_capitalAlphaRow3.SetActive(false);
     }
 
-    public void ShowSpecialChars() {
-        actionNumbers.SetActive(true);
-
-        if(isSmallLettersShown) {
-            actionSmallLetters.SetActive(true);
-            actionCapitalLetters.SetActive(true);
-        } else {
-            actionSmallLetters.SetActive(false);
-            actionCapitalLetters.SetActive(true);
-        }
-
-        smallAlphaRow1.SetActive(false);
-        smallAlphaRow2.SetActive(false);
-        smallAlphaRow3.SetActive(false);
-
-        capitalAlphaRow1.SetActive(false);
-        capitalAlphaRow2.SetActive(false);
-        capitalAlphaRow3.SetActive(false);
-
-        numbers.SetActive(true);
-        splCharsNum1.SetActive(false);
-        splCharsNum2.SetActive(false);
-
-        splChars1.SetActive(true);
-        splChars2.SetActive(true);
-    }
 }

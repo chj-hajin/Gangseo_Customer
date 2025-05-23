@@ -1,8 +1,15 @@
-// CustomerStateSocketClient.cs
 using UnityEngine;
 using System;
 using System.Net.Sockets;
 using System.Text;
+using System.IO;
+
+[Serializable]
+public class ServerConfig  
+{
+    public string videoServerIP;
+    public int videoServerPort;
+}
 
 public enum CustomerState
 {
@@ -14,17 +21,46 @@ public enum CustomerState
 public class CustomerStateSocketClient : MonoBehaviour
 {
     [Header("Video Server (Remote PC) Settings")]
-    [Tooltip("비디오 프로젝트가 실행 중인 PC의 IP")]
-    public string videoServerIP = "192.168.0.9";
-    [Tooltip("비디오 프로젝트가 리스닝 중인 포트")]
+    [Tooltip("StreamingAssets에서 불러오는 비디오 서버 IP")]
+    public string videoServerIP = "127.0.0.1";
+    [Tooltip("StreamingAssets에서 불러오는 포트")]
     public int videoServerPort = 9999;
 
     private TcpClient client;
     private NetworkStream stream;
 
+    void Awake()
+    {
+        LoadConfig();
+    }
+
     void Start()
     {
         ConnectToVideo();
+    }
+
+    private void LoadConfig()
+    {
+        // JSON 파일명도 변경
+        string configPath = Path.Combine(Application.streamingAssetsPath, "ServerConfig.json");
+        if (!File.Exists(configPath))
+        {
+            Debug.LogError($"[Socket] Config 파일을 찾을 수 없습니다: {configPath}");
+            return;
+        }
+
+        try
+        {
+            string json = File.ReadAllText(configPath);
+            var cfg = JsonUtility.FromJson<ServerConfig>(json);
+            videoServerIP = cfg.videoServerIP;
+            videoServerPort = cfg.videoServerPort;
+            Debug.Log($"[Socket] Loaded ServerConfig: IP={videoServerIP}, Port={videoServerPort}");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"[Socket] Config 읽기 오류: {e.Message}");
+        }
     }
 
     void ConnectToVideo()
@@ -53,8 +89,8 @@ public class CustomerStateSocketClient : MonoBehaviour
 
         try
         {
-            var msg = state.ToString();
-            var data = Encoding.UTF8.GetBytes(msg);
+            string msg = state.ToString();
+            byte[] data = Encoding.UTF8.GetBytes(msg);
             stream.Write(data, 0, data.Length);
             Debug.Log($"[Socket] Sent state to VideoServer: {msg}");
         }
