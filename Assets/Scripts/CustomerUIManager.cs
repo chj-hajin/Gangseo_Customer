@@ -1,99 +1,64 @@
-// CustomerUIManager.cs
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
+using TMPro;
 
-public class CustomerUIManager : Singleton<CustomerUIManager>
+public class CustomerUIManager : MonoBehaviour
 {
-    [Header("스크린들")]
+    public static CustomerUIManager Instance { get; private set; }
+
+    [Header("스크린")]
     public GameObject mainScreen;
     public GameObject reservationInputScreen;
-    public GameObject noneScreen;
+    public GameObject noneReservationScreen;
     public GameObject selectionScreen;
     public GameObject completeScreen;
 
-    [Header("예약 확인 종료되고 이미지 리스트")]
-    [SerializeField] private GameObject[] walkInObjects;
+    [Header("Walk-in 애니메이션 오브젝트들")]
+    [SerializeField] GameObject[] walkInObjects;
 
-    [Header("비예약 고객인 것 확인하고 나서의 이미지 리스트")]
-    [SerializeField] private GameObject[] noneWalkInObjects;
-    [SerializeField] private GameObject timeDisplay;
+    [Header("None-Walk-in 애니메이션 오브젝트들")]
+    [SerializeField] GameObject[] noneWalkInObjects;
+    [SerializeField] GameObject dateObject;
 
-    [Header("IDLE로 돌아가는 타임 아웃 시간")]
-    [Tooltip("IDLE로 돌아가는 함수 호출하는거 잊지 말 것")]
-    public float idleTimeout = 60f;
-    private float lastClickTime;
+    [Header("Complete 화면용 텍스트")]
+    public TMP_Text completeCustomerNameText;
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
+        Instance = this;
         ShowMain();
     }
 
-    void Update()
-    {
-        if (Time.time - lastClickTime > idleTimeout)
-            ShowMain();
-        if (Input.anyKeyDown)
-            lastClickTime = Time.time;
-    }
-
-    // IDLE 화면
     public void ShowMain()
     {
         HideAll();
         mainScreen.SetActive(true);
-        FindObjectOfType<CustomerStateSocketClient>().SendState(CustomerState.STATE_IDLE);
     }
 
-    // 예약 입력 화면
     public void ShowReservationInput()
     {
         HideAll();
         reservationInputScreen.SetActive(true);
     }
 
-    // 예약 없음 화면
-    public void ShowNone()
-    {
-        HideAll();
-        noneScreen.SetActive(true);
-        FindObjectOfType<CustomerStateSocketClient>()
-          .SendState(CustomerState.STATE_WALK_IN);
-    }
-
-    // 예약 선택 화면 (여러개의 데이터가 있을 시)
     public void ShowSelection()
     {
         HideAll();
         selectionScreen.SetActive(true);
     }
 
-    // 예약 완료 화면
-    public void ShowComplete()
+    /// <summary>
+    /// 단일 예약 확정 → Complete 화면 + Walk-in 애니메이션
+    /// </summary>
+    public void ShowComplete(string customerName)
     {
         HideAll();
+        completeCustomerNameText.text = customerName;
         completeScreen.SetActive(true);
-    }
-
-    // 회원 예약 확인 버튼
-    public void OnWalkInButton()
-    {
-        HideAll();
         StartCoroutine(PlayWalkIn());
-       
     }
 
-    // 비회원 고객 확인 버튼
-    public void OnNoneWalkInButton()
-    {
-        HideAll();
-        noneScreen.SetActive(true);
-        timeDisplay.SetActive(false);
-        StartCoroutine(PlayNoneWalkIN());
-        FindObjectOfType<CustomerStateSocketClient>().SendState(CustomerState.STATE_WALK_IN);
-    }
-
-    // 예약 확인 버튼 클릭 시 Walk-in 애니메이션 재생
     private IEnumerator PlayWalkIn()
     {
         foreach (var obj in walkInObjects)
@@ -104,26 +69,30 @@ public class CustomerUIManager : Singleton<CustomerUIManager>
         }
         ShowMain();
     }
-
-    // 비회원 확인 버튼 클릭 시 Walk-in 애니메이션 재생
-    private IEnumerator PlayNoneWalkIN()
+    public void ShowNoneReservation()
     {
+        HideAll();
+        noneReservationScreen.SetActive(true);
+        StartCoroutine(PlayNoneWalkIn());
+    }
+
+    private IEnumerator PlayNoneWalkIn()
+    {
+        dateObject.SetActive(false);
         foreach (var obj in noneWalkInObjects)
-        {
+        {    
             obj.SetActive(true);
             yield return new WaitForSeconds(5f);
-            timeDisplay.SetActive(true);
-            obj.SetActive(false);
+            dateObject.SetActive(true);
+            obj?.SetActive(false);
         }
         ShowMain();
     }
 
-    // 초기화
     private void HideAll()
     {
         mainScreen.SetActive(false);
         reservationInputScreen.SetActive(false);
-        noneScreen.SetActive(false);
         selectionScreen.SetActive(false);
         completeScreen.SetActive(false);
     }
