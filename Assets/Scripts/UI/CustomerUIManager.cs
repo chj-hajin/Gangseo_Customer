@@ -41,6 +41,8 @@ public class CustomerUIManager : MonoBehaviour
 
         Idle_Text.SetActive(true);
         None_Reservation_Text.SetActive(false);
+
+        CustomerStateSocketClient.Instance.SendState(CustomerState.STATE_IDLE);
     }
 
     public void ShowReservationInput()
@@ -52,7 +54,7 @@ public class CustomerUIManager : MonoBehaviour
         None_Reservation_Text.SetActive(false);
     }
 
-    public void ShowNoneRewervationInput()
+    public void ShowNoneReservationInput()
     {
         HideAll();
         reservationInputScreen.SetActive(true);
@@ -80,6 +82,8 @@ public class CustomerUIManager : MonoBehaviour
         Idle_Text.SetActive(true);
         None_Reservation_Text.SetActive(false);
 
+        CustomerStateSocketClient.Instance.SendState(CustomerState.STATE_RESERVATION_CONFIRMED);
+
         StartCoroutine(PlayWalkIn());
     }
 
@@ -101,6 +105,8 @@ public class CustomerUIManager : MonoBehaviour
 
         Idle_Text.SetActive(true);
         None_Reservation_Text.SetActive(false);
+
+        CustomerStateSocketClient.Instance.SendState(CustomerState.STATE_WALK_IN);
 
         StartCoroutine(PlayNoneWalkIn());
     }

@@ -18,7 +18,7 @@ public enum CustomerState
     STATE_WALK_IN
 }
 
-public class CustomerStateSocketClient : MonoBehaviour
+public class CustomerStateSocketClient : Singleton<CustomerStateSocketClient>
 {
     [Header("Video Server (Remote PC) Settings")]
     [Tooltip("StreamingAssets에서 불러오는 비디오 서버 IP")]
