@@ -21,6 +21,10 @@ public class CustomerUIManager : MonoBehaviour
     [SerializeField] GameObject[] noneWalkInObjects;
     [SerializeField] GameObject dateObject;
 
+    [Header("예약 확인이 안됩니다 문구")]
+    [SerializeField] GameObject Idle_Text;
+    [SerializeField] GameObject None_Reservation_Text;
+
     [Header("Complete 화면용 텍스트")]
     public TMP_Text completeCustomerNameText;
 
@@ -34,18 +38,34 @@ public class CustomerUIManager : MonoBehaviour
     {
         HideAll();
         mainScreen.SetActive(true);
+
+        Idle_Text.SetActive(true);
+        None_Reservation_Text.SetActive(false);
     }
 
     public void ShowReservationInput()
     {
         HideAll();
         reservationInputScreen.SetActive(true);
+
+        Idle_Text.SetActive(true);
+        None_Reservation_Text.SetActive(false);
+    }
+
+    public void ShowNoneRewervationInput()
+    {
+        HideAll();
+        reservationInputScreen.SetActive(true);
+
+        None_Reservation_Text.SetActive(true);
+        Idle_Text.SetActive(false);
     }
 
     public void ShowSelection()
     {
         HideAll();
         selectionScreen.SetActive(true);
+
     }
 
     /// <summary>
@@ -56,6 +76,10 @@ public class CustomerUIManager : MonoBehaviour
         HideAll();
         completeCustomerNameText.text = customerName;
         completeScreen.SetActive(true);
+
+        Idle_Text.SetActive(true);
+        None_Reservation_Text.SetActive(false);
+
         StartCoroutine(PlayWalkIn());
     }
 
@@ -69,10 +93,15 @@ public class CustomerUIManager : MonoBehaviour
         }
         ShowMain();
     }
+
     public void ShowNoneReservation()
     {
         HideAll();
         noneReservationScreen.SetActive(true);
+
+        Idle_Text.SetActive(true);
+        None_Reservation_Text.SetActive(false);
+
         StartCoroutine(PlayNoneWalkIn());
     }
 

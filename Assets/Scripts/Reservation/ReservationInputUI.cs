@@ -34,15 +34,15 @@ public class TestResponseWrapper
 public class ReservationRequestBody
 {
     public string centerCode;
-    public string customerName;
-    public string customerPhoneNumber;
+    public string name;
+    public string phonenumber;
 }
 
 public class ReservationInputUI : Singleton<ReservationInputUI>
 {
     [Header("입력 필드")]
-    public TMP_InputField nameInput;    // 문자용
-    public TMP_InputField phoneInput;   // 숫자용
+    public TMP_InputField nameInput;
+    public TMP_InputField phoneInput;
 
     [Header("키보드 컨테이너")]
     public GameObject textKeyboardContainer;
@@ -52,13 +52,9 @@ public class ReservationInputUI : Singleton<ReservationInputUI>
     public Button prevButton;
     public Button confirmButton;
 
-    [Header("테스트용 버튼 (로컬 JSON)")]
-    public Button testButton;
-
     [Header("센터 코드 (POST URL)")]
     public string centerCode = "YOUR_CENTER_CODE";
 
-    // 현재 활성 입력 필드
     private TMP_InputField currentField;
 
     protected override void Awake()
@@ -74,7 +70,7 @@ public class ReservationInputUI : Singleton<ReservationInputUI>
         prevButton.onClick.AddListener(() =>
         {
             HideAllKeyboards();
-            CustomerUIManager.Instance.ShowMain();
+            CustomerUIManager.Instance.ShowReservationInput();
         });
 
         // 확인
@@ -91,33 +87,27 @@ public class ReservationInputUI : Singleton<ReservationInputUI>
             currentField = nameInput;
             HangulComposer.Instance.ResetAll();
             currentField.text = string.Empty;
-
             textKeyboardContainer.SetActive(true);
             numericKeyboardContainer.SetActive(false);
-
             nameInput.ActivateInputField();
         }
         else if (sel == phoneInput.gameObject)
         {
             currentField = phoneInput;
-            HangulComposer.Instance.ResetAll(); // 숫자판 출현할 때도 리셋
+            HangulComposer.Instance.ResetAll();
             currentField.text = string.Empty;
-
             textKeyboardContainer.SetActive(false);
             numericKeyboardContainer.SetActive(true);
-
             phoneInput.ActivateInputField();
         }
     }
 
-    // 한글 키보드 입력
     public void AddLetter(string letter)
     {
         if (currentField == nameInput && !string.IsNullOrEmpty(letter))
             currentField.text = HangulComposer.Instance.Add(letter[0]);
     }
 
-    // 숫자 키보드 입력
     public void AddNumber(string number)
     {
         if (currentField == phoneInput && !string.IsNullOrEmpty(number))
@@ -159,51 +149,61 @@ public class ReservationInputUI : Singleton<ReservationInputUI>
     {
         string name = nameInput.text.Trim();
         string phone = Regex.Replace(phoneInput.text, @"\D", "");
-
         if (string.IsNullOrEmpty(name) || phone.Length < 9)
         {
             Debug.LogWarning("이름 또는 전화번호 형식이 잘못되었습니다.");
             return;
         }
-
         StartCoroutine(PostReservationCheck(name, phone));
     }
 
     private IEnumerator PostReservationCheck(string name, string phone)
     {
-        // 원래 POST URL → GET 엔드포인트로 변경
-        string url = $"http://175.118.126.63/www_encar/getLIst.cfm?customerName={UnityWebRequest.EscapeURL(name)}&customerPhoneNumber={UnityWebRequest.EscapeURL(phone)}";
-
-        using (var req = UnityWebRequest.Get(url))
+        string url = $"http://175.118.126.63/www_encar/getLIst.cfm";
+        var body = new ReservationRequestBody
         {
-            yield return req.SendWebRequest();
+            centerCode = centerCode,
+            name = name,
+            phonenumber = phone
+        };
+        string json = JsonUtility.ToJson(body);
 
-            if (req.result != UnityWebRequest.Result.Success)
-            {
-                Debug.LogError($"[PostReservationCheck] 실패: {req.error}");
-                yield break;
-            }
+        //Post
+        var req = new UnityWebRequest(url, "POST");
+        byte[] bytes = System.Text.Encoding.UTF8.GetBytes(json);
+        req.uploadHandler = new UploadHandlerRaw(bytes);
+        req.downloadHandler = new DownloadHandlerBuffer();
+        req.SetRequestHeader("Content-Type", "application/json");
 
-            // JSON 파싱
-            var wrapper = JsonUtility.FromJson<TestResponseWrapper>(req.downloadHandler.text);
-            if (!wrapper.result)
-            {
-                Debug.LogWarning("[PostReservationCheck] result == false");
-                yield break;
-            }
+        yield return req.SendWebRequest();
 
-            var list = wrapper.reservationResponseList;
-            if (list.Count == 1)
-            {
-                CustomerUIManager.Instance.ShowComplete(list[0].customerName);
-            }
-            else
-            {
-                CustomerUIManager.Instance.ShowSelection();
-                ReservationSelection.Instance.Init(list);
-            }
+        if (req.result != UnityWebRequest.Result.Success)
+        {
+            Debug.LogError($"[PostReservationCheck] 실패: {req.error}");
+            yield break;
+        }
+
+        var wrapper = JsonUtility.FromJson<TestResponseWrapper>(req.downloadHandler.text);
+
+        if (!wrapper.result)
+        {
+            // false 면 입력창 + NoneReservation 타이틀
+            CustomerUIManager.Instance.ShowNoneReservation();
+            yield break;
+        }
+
+
+        var list = wrapper.reservationResponseList;
+        if (list.Count == 1)
+        {
+            // 단일
+            CustomerUIManager.Instance.ShowComplete(list[0].customerName);
+        }
+        else
+        {
+            // 다중
+            CustomerUIManager.Instance.ShowSelection();
+            ReservationSelection.Instance.Init(list);
         }
     }
-
-
 }
