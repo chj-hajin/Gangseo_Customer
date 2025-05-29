@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 
@@ -16,8 +15,8 @@ public class ReservationSelection : MonoBehaviour
     public GameObject itemPrefab;
 
     [Header("버튼")]
-    public Button prevButton;
-    public Button confirmButton;
+    [SerializeField] private Button prevButton;
+    [SerializeField] private Button confirmButton;
 
     private List<TestReservation> currentList;
 
@@ -37,7 +36,7 @@ public class ReservationSelection : MonoBehaviour
         var group = content.GetComponent<ToggleGroup>();
         if (group == null)
             group = content.gameObject.AddComponent<ToggleGroup>();
-        group.allowSwitchOff = false;  // 무조건 하나만 켜지도록
+        group.allowSwitchOff = false;  // 반드시 하나만 선택
 
         // 2) 기존 아이템 삭제
         foreach (Transform t in content) Destroy(t.gameObject);
@@ -54,21 +53,19 @@ public class ReservationSelection : MonoBehaviour
             string weekday = dt.ToString("ddd", new CultureInfo("ko-KR"));
             string timeStr = r.useStartTime;
 
-            // 아이템 세팅
+            // 아이템 세팅 (첫 번째만 true)
             var item = go.GetComponent<SelectionListItem>();
             item.Setup(dateStr, weekday, timeStr, i == 0);
 
             // ToggleGroup 에 등록
             var tog = go.GetComponent<Toggle>();
-            if (tog != null)
-                tog.group = group;
+            tog.group = group;
         }
 
         // 4) 버튼 리스너
         prevButton.onClick.RemoveAllListeners();
         prevButton.onClick.AddListener(() =>
         {
-            // 뒤로: 입력 화면으로
             CustomerUIManager.Instance.ShowReservationInput();
         });
 

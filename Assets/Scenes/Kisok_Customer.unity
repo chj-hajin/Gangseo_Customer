@@ -11634,7 +11634,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &469775753
 RectTransform:
   m_ObjectHideFlags: 0
@@ -17595,7 +17595,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &748303944
 RectTransform:
   m_ObjectHideFlags: 0
@@ -26260,7 +26260,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1011875812
 Transform:
   m_ObjectHideFlags: 0
@@ -35398,7 +35398,7 @@ GameObject:
   - component: {fileID: 1390194270}
   - component: {fileID: 1390194269}
   m_Layer: 0
-  m_Name: '*Reservation_check'
+  m_Name: '*Reservation_selection'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -41,5 +41,6 @@ public class SelectionListItem : MonoBehaviour
         // ToggleGroup 이 붙은 부모 Content 에 자동으로 그룹 추가
         var group = GetComponentInParent<ToggleGroup>();
         toggle.group = group;
+        
     }
 }

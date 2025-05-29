@@ -144,10 +144,13 @@ public class ReservationInputUI : Singleton<ReservationInputUI>
         StartCoroutine(PostReservationCheck(name, phone));
     }
 
+    // 
     private IEnumerator PostReservationCheck(string name, string phone)
     {
         const string url = "http://175.118.126.63/www_encar/getList.cfm";
 
+        // 나중에 진짜 api 호출할 때는 여기 부분 바궈야 함  -> customerName, customerPhoneNumber
+        // 아니면 body에 담아주거나
         var form = new WWWForm();
         form.AddField("name", name);
         form.AddField("phonenumber", phone);
@@ -185,6 +188,8 @@ public class ReservationInputUI : Singleton<ReservationInputUI>
             if (!wrapper.result)
             {
                 CustomerUIManager.Instance.ShowNoneReservationInput();
+                nameInput.text = string.Empty;
+                phoneInput.text = string.Empty;
                 yield break;
             }
 

@@ -82,9 +82,9 @@ public class CustomerUIManager : MonoBehaviour
         Idle_Text.SetActive(true);
         None_Reservation_Text.SetActive(false);
 
-        CustomerStateSocketClient.Instance.SendState(CustomerState.STATE_RESERVATION_CONFIRMED);
-
         StartCoroutine(PlayWalkIn());
+
+        CustomerStateSocketClient.Instance.SendState(CustomerState.STATE_RESERVATION_CONFIRMED);
     }
 
     private IEnumerator PlayWalkIn()
@@ -106,9 +106,11 @@ public class CustomerUIManager : MonoBehaviour
         Idle_Text.SetActive(true);
         None_Reservation_Text.SetActive(false);
 
+        StartCoroutine(PlayNoneWalkIn());
+
         CustomerStateSocketClient.Instance.SendState(CustomerState.STATE_WALK_IN);
 
-        StartCoroutine(PlayNoneWalkIn());
+        
     }
 
     private IEnumerator PlayNoneWalkIn()
