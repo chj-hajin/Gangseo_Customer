@@ -5,7 +5,7 @@ using System.Text;
 using System.IO;
 
 [Serializable]
-public class ServerConfig  
+public class ServerConfig
 {
     public string videoServerIP;
     public int videoServerPort;
@@ -26,23 +26,22 @@ public class CustomerStateSocketClient : Singleton<CustomerStateSocketClient>
     [Tooltip("StreamingAssets에서 불러오는 포트")]
     public int videoServerPort = 9999;
 
-    private TcpClient client;
-    private NetworkStream stream;
-
-    void Awake()
+    private void Awake()
     {
         LoadConfig();
     }
 
     void Start()
     {
-        ConnectToVideo();
+        // Optional: 첫 연결 테스트용 로그
+        Debug.Log($"[Socket] Start() – Server at {videoServerIP}:{videoServerPort}");
     }
 
     private void LoadConfig()
     {
-        // JSON 파일명도 변경
         string configPath = Path.Combine(Application.streamingAssetsPath, "ServerConfig.json");
+        Debug.Log($"[Socket] Config 경로: {configPath}, Exists: {File.Exists(configPath)}");
+
         if (!File.Exists(configPath))
         {
             Debug.LogError($"[Socket] Config 파일을 찾을 수 없습니다: {configPath}");
@@ -63,46 +62,36 @@ public class CustomerStateSocketClient : Singleton<CustomerStateSocketClient>
         }
     }
 
-    void ConnectToVideo()
-    {
-        try
-        {
-            client = new TcpClient();
-            client.Connect(videoServerIP, videoServerPort);
-            stream = client.GetStream();
-            Debug.Log($"[Socket] Connected to VideoServer {videoServerIP}:{videoServerPort}");
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"[Socket] Connection error: {e.Message}");
-        }
-    }
-
+    /// <summary>
+    /// 메시지마다 새 연결 → 전송 → 닫기 방식
+    /// </summary>
     public void SendState(CustomerState state)
     {
-        if (stream == null || !client.Connected)
-        {
-            Debug.LogWarning("[Socket] Not connected, retrying...");
-            ConnectToVideo();
-            if (stream == null) return;
-        }
-
+        Debug.Log($"[Socket] → SendState 호출: {state}");
         try
         {
-            string msg = state.ToString();
-            byte[] data = Encoding.UTF8.GetBytes(msg);
-            stream.Write(data, 0, data.Length);
-            Debug.Log($"[Socket] Sent state to VideoServer: {msg}");
+            using (var tmpClient = new TcpClient())
+            {
+                tmpClient.NoDelay = true;
+                tmpClient.Connect(videoServerIP, videoServerPort);
+                Debug.Log($"[Socket] Connected to {videoServerIP}:{videoServerPort}");
+
+                using (var ns = tmpClient.GetStream())
+                {
+                    // 끝에 개행 문자 붙이면 서버에서 Read 후 Trim() 시에도 잘 분리됩니다.
+                    string msg = state.ToString() + "\n";
+                    byte[] data = Encoding.UTF8.GetBytes(msg);
+
+                    ns.Write(data, 0, data.Length);
+                    ns.Flush();
+                    Debug.Log($"[Socket] Sent bytes: {data.Length}");
+                }
+                // using 블록 종료 시 스트림&소켓 모두 닫힘
+            }
         }
         catch (Exception e)
         {
-            Debug.LogError($"[Socket] Send error: {e.Message}");
+            Debug.LogError($"[Socket] SendState error: {e.Message}");
         }
-    }
-
-    void OnDestroy()
-    {
-        stream?.Close();
-        client?.Close();
     }
 }

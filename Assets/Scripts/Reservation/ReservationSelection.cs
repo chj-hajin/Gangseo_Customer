@@ -90,6 +90,6 @@ public class ReservationSelection : MonoBehaviour
 
         // 선택된 예약으로 Complete 화면
         var selected = currentList[idx];
-        CustomerUIManager.Instance.ShowComplete(selected.customerName);
+        CustomerUIManager.Instance.ShowComplete(selected.customerName, selected.firmName, selected.modelName, selected.gradeName, selected.dealerName);
     }
 }

@@ -55,11 +55,12 @@ public class ReservationInputUI : Singleton<ReservationInputUI>
 
     void Start()
     {
+        /*
         prevButton.onClick.AddListener(() =>
         {
             HideAllKeyboards();
             CustomerUIManager.Instance.ShowReservationInput();
-        });
+        });*/
 
         confirmButton.onClick.AddListener(OnConfirm);
     }
@@ -201,9 +202,25 @@ public class ReservationInputUI : Singleton<ReservationInputUI>
             }
 
             // 6) 단일 vs 다중 분기
+            if (!wrapper.result)
+            {
+                CustomerUIManager.Instance.ShowNoneReservation();
+                yield break;
+            }
+
+            // wrapper.reservationResponseList에 데이터가 있으므로
             var list = wrapper.reservationResponseList;
             if (list.Count == 1)
-                CustomerUIManager.Instance.ShowComplete(list[0].customerName);
+            {
+                var r = list[0];
+                CustomerUIManager.Instance.ShowComplete(
+                    r.customerName,
+                    r.useDate,
+                    r.useStartTime,
+                    r.vehicleNo,
+                    r.manufacturerName + " " + r.modelName
+                );
+            }
             else
             {
                 CustomerUIManager.Instance.ShowSelection();
