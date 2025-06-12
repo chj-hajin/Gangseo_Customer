@@ -1,3 +1,4 @@
+// 파일명: AbsentReceiverController.cs
 using UnityEngine;
 using UnityEngine.UI;
 using System;
@@ -15,18 +16,18 @@ public class AbsentReceiverConfig
     public string absentImagePath;
 }
 
-public class AbsentButtonController : MonoBehaviour
+public class AbsentReceiverController : MonoBehaviour
 {
     [Header("JSON 설정 파일 이름 (StreamingAssets)")]
     [SerializeField] private string configFileName = "AbsentReceiverConfig.json";
 
     [Header("부재중 루트 오브젝트 (On/Off 토글)")]
-    [SerializeField] private GameObject absentRoot;    // ← 루트
+    [SerializeField] private GameObject absentRoot;
 
     [Header("부재중 이미지 (이미지 로드만)")]
-    [SerializeField] private Image absentUIImage;      // ← 자식 Image 컴포넌트
+    [SerializeField] private Image absentUIImage;
 
-    private int listenPort = 9999;
+    private int listenPort = 8501;
     private string absentImagePath;
 
     private TcpListener listener;
@@ -48,16 +49,13 @@ public class AbsentButtonController : MonoBehaviour
             return;
         }
 
-        // 이미지 로드
         LoadAbsentSprite();
-
-        // 루트 오브젝트는 처음에 숨기기
         absentRoot.SetActive(false);
 
-        // TCP 리스닝 시작
         isRunning = true;
         listenerThread = new Thread(StartListening) { IsBackground = true };
         listenerThread.Start();
+        Debug.Log($"[AbsentReceiver] 리스너 스레드 시작");
     }
 
     void Update()
@@ -71,6 +69,7 @@ public class AbsentButtonController : MonoBehaviour
         isRunning = false;
         listener?.Stop();
         listenerThread?.Join();
+        Debug.Log($"[AbsentReceiver] 리스너 종료됨");
     }
 
     private void LoadConfig()
@@ -88,6 +87,7 @@ public class AbsentButtonController : MonoBehaviour
             var cfg = JsonUtility.FromJson<AbsentReceiverConfig>(json);
             listenPort = cfg.listenPort;
             absentImagePath = cfg.absentImagePath;
+            Debug.Log($"[AbsentReceiver] Config 읽기 완료: Port={listenPort}, ImagePath={absentImagePath}");
         }
         catch (Exception e)
         {
@@ -112,11 +112,13 @@ public class AbsentButtonController : MonoBehaviour
             return;
         }
 
-        var spr = Sprite.Create(tex,
+        var spr = Sprite.Create(
+            tex,
             new Rect(0, 0, tex.width, tex.height),
             new Vector2(0.5f, 0.5f));
         absentUIImage.sprite = spr;
         absentUIImage.SetNativeSize();
+        Debug.Log($"[AbsentReceiver] 이미지 로드 완료: {fullPath}");
     }
 
     private void StartListening()
@@ -125,6 +127,7 @@ public class AbsentButtonController : MonoBehaviour
         {
             listener = new TcpListener(IPAddress.Any, listenPort);
             listener.Start();
+            Debug.Log($"[AbsentReceiver] Listening on port {listenPort}");
 
             while (isRunning)
             {
@@ -137,15 +140,29 @@ public class AbsentButtonController : MonoBehaviour
                 using (var client = listener.AcceptTcpClient())
                 using (var stream = client.GetStream())
                 {
+                    Debug.Log($"[AbsentReceiver] 연결 수락됨: {((IPEndPoint)client.Client.RemoteEndPoint).Address}");
                     var buf = new byte[1024];
                     int len;
                     while (isRunning && (len = stream.Read(buf, 0, buf.Length)) > 0)
                     {
                         var msg = Encoding.UTF8.GetString(buf, 0, len).Trim();
+                        Debug.Log($"[AbsentReceiver] 수신 메시지: “{msg}”");
                         if (msg.Equals("Absent_on", StringComparison.OrdinalIgnoreCase))
-                            actionQueue.Enqueue(() => absentRoot.SetActive(true));   // ← 루트 켜기
+                        {
+                            actionQueue.Enqueue(() =>
+                            {
+                                absentRoot.SetActive(true);
+                                Debug.Log("[AbsentReceiver] 부재중 ON 실행");
+                            });
+                        }
                         else if (msg.Equals("Absent_off", StringComparison.OrdinalIgnoreCase))
-                            actionQueue.Enqueue(() => absentRoot.SetActive(false));  // ← 루트 끄기
+                        {
+                            actionQueue.Enqueue(() =>
+                            {
+                                absentRoot.SetActive(false);
+                                Debug.Log("[AbsentReceiver] 부재중 OFF 실행");
+                            });
+                        }
                     }
                 }
             }
